@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS (version 5.3.0-alpha3) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Vue.js (latest version) -->
+    <script src="https://unpkg.com/vue@3"></script>
+
+    <title>Hello, Vue + Bootstrap!</title>
+    <style>
+      .custom-text {
+        font-family: 'Arial', sans-serif; /* Change the font */
+        font-size: 1.2em; /* Adjust font size */
+        color: #ec2ea9; /* Change text color */
+        background-color: #f0f8ff; /* Optional: background color */
+        padding: 10px; /* Optional: padding */
+        border-radius: 5px; /* Optional: rounded corners */
+        display: inline-block; /* Make the background color wrap around text */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-5">
+        <div id="app">
+          <div class="row">
+            <div class="col-4">
+              
+              <div class="card p-3">
+                <div class="card-header">
+                  <h5>Who Pays the Bill</h5>
+                </div>
+              <div class="card-body">
+                <form v-on:submit.prevent="handleSubmit" v-show="!arr.btnclick">
+                  <div class="form-row align-items-center">
+                    <div class="col-auto mb-2">
+                      <label for="name">Name</label>
+                    </div>
+                    <div class="col mb-2">
+                      <input type="text" class="form-control"  v-model="name">
+                    </div>
+                    <div class="col-auto mb-2">
+                      <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                  </div>
+                </form>
+
+                <table v-show="!arr.btnclick" v-if="arr.vals.length > 0">
+                    <tr>
+                        <td>
+                            <button v-on:click="callfunc(item,index)" class="btn btn-success" style="color:white;width:auto;font-size: 14px;margin-right:5px;margin-top:5px;" v-for="(item, index) in arr.vals" :key="index">
+                                {{ item }}</button>
+                              
+                        </td>
+                    </tr>
+                    
+                </table>
+                
+                <button v-show="!arr.btnclick" v-if="arr.vals.length > 1"  v-on:click="run" class="btn btn-dark" style="color:white;width:auto; margin-top:5px;" >Choose winner</button>
+
+                <button v-show="arr.btnclick"  v-on:click="check_again" class="btn btn-danger" 
+                style="color:white;width:auto; margin-top:5px;" >Choose Again</button>
+                 <hr v-show="arr.btnclick" />
+                 <button v-show="arr.btnclick"  v-on:click="reset" class="btn btn-info" 
+                style="color:white;width:auto; margin-top:5px;" >Reset</button>
+                 <hr v-show="arr.btnclick" />
+                <p v-show="arr.btnclick" class="custom-text" v-html="result"> </p>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+
+    <!-- Bootstrap JS Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Vue.js App -->
+    <script>
+      const { createApp,ref } = Vue;
+
+      createApp({
+        setup() {
+            let arr=ref({
+                vals:['heello','hhf','catch'],
+                btnclick:false
+            });
+           let result=ref('');
+           let name= ref("");
+           function callfunc(item,index){
+            arr.value.vals.splice(index, 1);
+           }
+           function run(){
+            let random_num = Math.floor(Math.random() * arr.value.vals.length);
+            result.value='<strong style="color:green;">'+arr.value.vals[random_num] + '</strong> you have to pay the bill';
+            
+            arr.value.btnclick=true;
+            //console.log(result);
+           }
+           function check_again(){
+            
+            arr.value.btnclick=false;
+           }
+           function reset(){
+            arr.value.vals=[];
+            arr.value.btnclick=false;
+           }
+            function handleSubmit(){
+
+            if (name.value && !arr.value.vals.includes(name.value)) {
+              arr.value.vals.push(name.value);
+              name.value = ""; 
+            } else {
+              alert("Value already exists or is empty!"); 
+            }
+            } 
+          return {
+            arr,name,handleSubmit,callfunc,result,run,check_again,reset
+          };
+        }
+      }).mount('#app');
+    </script>
+  </body>
+</html>
